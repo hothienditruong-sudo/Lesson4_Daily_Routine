@@ -584,63 +584,99 @@
   </div>
 
 // ===== READING FILL IN THE BLANK =====
+<div class="card">
+  <div style="font-size:16px; font-weight:800; margin-bottom:12px;">
+    📝 Fill in the Blanks
+  </div>
 
-const readingAnswers = [
-  "wake up",
-  "get up",
-  "make my bed",
-  "go to the bathroom",
-  "have a wash",
-  "clean my teeth",
-  "have a shower",
-  "have a bath",
-  "breakfast",
-  "lunch",
-  "feed the cat",
-  "do the shopping",
-  "doing my washing",
-  "go to bed",
-  "go to sleep"
-];
+  <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">
+    Complete the text with the correct words or phrases.
+  </p>
 
-function checkReadingQuiz() {
+  <div id="reading-quiz">
 
-  let score = 0;
+    <p>
+      During the week I usually (1)
+      <input type="text" id="blank-1"> at 7am.
+      The alarm rings and I (2)
+      <input type="text" id="blank-2"> a few minutes later.
+    </p>
 
-  readingAnswers.forEach((answer, index) => {
+    <p>
+      I open the window and (3)
+      <input type="text" id="blank-3">
+      because I don't like a messy room.
+    </p>
 
-    const input =
-      document.getElementById(`blank-${index + 1}`);
+    <p>
+      Then I (4)
+      <input type="text" id="blank-4">.
+    </p>
 
-    if (!input) return;
+    <p>
+      I (5)
+      <input type="text" id="blank-5">,
+      (6)
+      <input type="text" id="blank-6">
+      and put on a bit of makeup.
+    </p>
 
-    const studentAnswer =
-      input.value.trim().toLowerCase();
+    <p>
+      When I have more time I (7)
+      <input type="text" id="blank-7">
+      but in the winter I sometimes (8)
+      <input type="text" id="blank-8">
+      instead of a shower to relax.
+    </p>
 
-    if (studentAnswer === answer.toLowerCase()) {
-      score++;
-    }
+    <p>
+      For (9)
+      <input type="text" id="blank-9">
+      I drink coffee and eat toast.
+    </p>
 
-  });
+    <p>
+      At work I have a light (10)
+      <input type="text" id="blank-10">
+      around 12.30, usually a salad or a sandwich.
+    </p>
 
-  document.getElementById('reading-result').innerHTML =
+    <p>
+      When I arrive home I (11)
+      <input type="text" id="blank-11">
+      before I relax.
+    </p>
 
-  `<div class="result-msg ${score===15?'success':'error'}">
-      ${score===15?'🎉 Excellent!':'📝 Keep practising!'}
-      Correct ${score}/15.
-   </div>`;
-}
+    <p>
+      I usually (12)
+      <input type="text" id="blank-12">
+      with my mum on Saturday morning.
+    </p>
 
-function resetReadingQuiz() {
+    <p>
+      I also help with (13)
+      <input type="text" id="blank-13">
+      on Sunday, whites first, then colours.
+    </p>
 
-  for(let i=1;i<=15;i++){
-    const input=document.getElementById(`blank-${i}`);
-    if(input) input.value='';
-  }
+    <p>
+      At about 10.30pm I (14)
+      <input type="text" id="blank-14">,
+      read a little and finally (15)
+      <input type="text" id="blank-15">
+      straight away.
+    </p>
 
-  document.getElementById('reading-result').innerHTML='';
+  </div>
 
-}
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+    <button class="btn btn-primary" onclick="checkReadingQuiz()">✅ Check Answers</button>
+    <button class="btn btn-secondary" onclick="resetReadingQuiz()">🔄 Reset</button>
+  </div>
+
+  <div id="reading-result" style="margin-top:12px;"></div>
+
+</div>
 
     <!-- Dialogue script -->
   <div class="card">
@@ -1208,6 +1244,25 @@ function resetGrammar() {
   document.querySelectorAll('.grammar-opt').forEach(o=>o.classList.remove('selected','correct','incorrect','disabled'));
   document.getElementById('grammar-result').innerHTML='';
 }
+
+  // ===== READING QUIZ =====
+  const readingAnswers = [
+  "wake up",
+  "get up",
+  "make my bed",
+  "go to the bathroom",
+  "have a wash",
+  "clean my teeth",
+  "have a shower",
+  "have a bath",
+  "breakfast",
+  "lunch",
+  "feed the cat",
+  "do the shopping",
+  "doing my washing",
+  "go to bed",
+  "go to sleep"
+];
 
 // ===== INIT =====
 buildWarmup();
