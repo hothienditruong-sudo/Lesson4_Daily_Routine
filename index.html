@@ -1244,6 +1244,152 @@ function resetGrammar() {
   document.getElementById('grammar-result').innerHTML='';
 }
 
+  // ===== READING FILL IN THE BLANK =====
+
+const readingAnswers = [
+  "wake up",
+  "get up",
+  "make my bed",
+  "go to the bathroom",
+  "have a wash",
+  "clean my teeth",
+  "have a shower",
+  "have a bath",
+  "breakfast",
+  "lunch",
+  "feed the cat",
+  "do the shopping",
+  "doing my washing",
+  "go to bed",
+  "go to sleep"
+];
+
+function buildReadingQuiz() {
+
+  document.getElementById('reading-quiz').innerHTML = `
+
+  <div class="fill-text">
+
+  <p>
+  During the week I usually (1)
+  <input type="text" id="blank-1">
+  at 7am. The alarm rings and I (2)
+  <input type="text" id="blank-2">
+  a few minutes later.
+  </p>
+
+  <p>
+  I open the window and (3)
+  <input type="text" id="blank-3">
+  because I don't like a messy room.
+  </p>
+
+  <p>
+  Then I (4)
+  <input type="text" id="blank-4">.
+  </p>
+
+  <p>
+  I (5)
+  <input type="text" id="blank-5">,
+  (6)
+  <input type="text" id="blank-6">
+  and put on a bit of makeup.
+  </p>
+
+  <p>
+  When I have more time I (7)
+  <input type="text" id="blank-7">
+  but in the winter I sometimes (8)
+  <input type="text" id="blank-8">
+  instead of a shower to relax.
+  </p>
+
+  <p>
+  For (9)
+  <input type="text" id="blank-9">
+  I drink coffee and eat toast.
+  </p>
+
+  <p>
+  At work I have a light (10)
+  <input type="text" id="blank-10">
+  around 12.30.
+  </p>
+
+  <p>
+  When I arrive home I (11)
+  <input type="text" id="blank-11">
+  before I relax.
+  </p>
+
+  <p>
+  I usually (12)
+  <input type="text" id="blank-12">
+  with my mum on Saturday morning.
+  </p>
+
+  <p>
+  I also help with (13)
+  <input type="text" id="blank-13">
+  on Sunday.
+  </p>
+
+  <p>
+  At about 10.30pm I (14)
+  <input type="text" id="blank-14">,
+  read a little and finally (15)
+  <input type="text" id="blank-15">
+  straight away.
+  </p>
+
+  </div>
+  `;
+}
+
+function checkReadingQuiz() {
+
+  let score = 0;
+
+  readingAnswers.forEach((answer, index) => {
+
+    const input =
+      document.getElementById(`blank-${index + 1}`);
+
+    const student =
+      input.value.trim().toLowerCase();
+
+    if(student === answer.toLowerCase()) {
+
+      score++;
+      input.style.border = "2px solid #22c55e";
+
+    } else {
+
+      input.style.border = "2px solid #ef4444";
+
+    }
+
+  });
+
+  document.getElementById('reading-result').innerHTML =
+
+  `<div class="result-msg ${score===15?'success':'error'}">
+    ${score===15?'🎉 Excellent!':'📝 Keep practising!'}
+    Correct ${score}/15
+  </div>`;
+}
+
+function resetReadingQuiz() {
+
+  buildReadingQuiz();
+
+  document.getElementById('reading-result').innerHTML='';
+
+}
+
+buildReadingQuiz();
+
 // ===== INIT =====
 buildWarmup();
 buildVfcGrid();
