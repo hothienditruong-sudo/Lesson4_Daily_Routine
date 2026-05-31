@@ -425,20 +425,6 @@
       <div id="listening-result" style="margin-top:12px;"></div>
     </div>
 
-    <div class="card">
-      <h3 style="font-size:16px; font-weight:800; margin-bottom:12px;">📝 Fill in the blanks — Điền vào bài nghe gốc</h3>
-      <p style="color:var(--muted); font-size:14px; margin-bottom:14px;">Nghe audio bài học và điền vào chỗ trống trong đoạn văn:</p>
-      <div class="fill-sentence" style="line-height:2.4;">
-        During the week I usually <input class="blank-input" style="width:110px" data-ans="wake up" placeholder="(1)___"> at 7am. The alarm rings and I <input class="blank-input" style="width:90px" data-ans="get up" placeholder="(2)___"> a few minutes later. I open the window and <input class="blank-input" style="width:120px" data-ans="make my bed" placeholder="(3)___"> because I don't like a messy room. Then I <input class="blank-input" style="width:120px" data-ans="have a shower" placeholder="(4)___">. I <input class="blank-input" style="width:120px" data-ans="clean my teeth" placeholder="(5)___"> and put on a bit of makeup. For breakfast I drink coffee and eat toast. At work I have a light <input class="blank-input" style="width:80px" data-ans="lunch" placeholder="(6)___"> around 12.30. In the evening I sometimes <input class="blank-input" style="width:80px" data-ans="eat out" placeholder="(7)___"> with friends. At about 10.30pm I <input class="blank-input" style="width:80px" data-ans="go to bed" placeholder="(8)___"> and finally <input class="blank-input" style="width:110px" data-ans="go to sleep" placeholder="(9)___"> straight away.
-      </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
-        <button class="btn btn-primary" onclick="checkListenFill()">✅ Kiểm tra</button>
-        <button class="btn btn-secondary" onclick="resetListenFill()">🔄 Làm lại</button>
-      </div>
-      <div id="listen-fill-result" style="margin-top:10px;"></div>
-    </div>
-  </div>
-
   <!-- WRITING -->
   <div class="activity-panel" id="act-writing">
     <div class="card">
@@ -597,7 +583,19 @@
     </a>
   </div>
 
-  <!-- Dialogue script -->
+  <!-- Reading tasks -->
+  <div class="card">
+    <div style="font-size:16px; font-weight:800; margin-bottom:12px;">📖 Reading Comprehension</div>
+    <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Đọc đoạn văn trong bài và chọn đáp án đúng:</p>
+    <div id="reading-quiz"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+      <button class="btn btn-primary" onclick="checkReadingQuiz()">✅ Kiểm tra</button>
+      <button class="btn btn-secondary" onclick="resetReadingQuiz()">🔄 Làm lại</button>
+    </div>
+    <div id="reading-result" style="margin-top:12px;"></div>
+  </div>
+
+    <!-- Dialogue script -->
   <div class="card">
     <div style="font-size:16px; font-weight:800; margin-bottom:16px;">💬 Mẫu hội thoại luyện tập</div>
     <div class="dialogue-script">
@@ -618,18 +616,6 @@
       <div style="align-self:flex-end;"><div class="bubble-label" style="text-align:right">👤 B</div>
         <div class="bubble bubble-b">I usually stay in and watch TV. At weekends I sometimes go out or eat out. I always go to bed at about 10:30 pm and go to sleep straight away.</div></div>
     </div>
-  </div>
-
-  <!-- Reading tasks -->
-  <div class="card">
-    <div style="font-size:16px; font-weight:800; margin-bottom:12px;">📖 Reading Comprehension</div>
-    <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Đọc đoạn văn trong bài và chọn đáp án đúng:</p>
-    <div id="reading-quiz"></div>
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
-      <button class="btn btn-primary" onclick="checkReadingQuiz()">✅ Kiểm tra</button>
-      <button class="btn btn-secondary" onclick="resetReadingQuiz()">🔄 Làm lại</button>
-    </div>
-    <div id="reading-result" style="margin-top:12px;"></div>
   </div>
 
   <!-- Speaking practice -->
@@ -1063,12 +1049,12 @@ function answerQuiz(el,qi,oi,correct) {
 }
 
 // ===== LISTENING QUIZ =====
-const listeningQuizData = [
-  {q:'What time does the speaker usually wake up?', opts:['6:00 am','7:00 am','8:00 am','9:00 am'], ans:1},
-  {q:'What does the speaker have for breakfast?', opts:['Eggs and toast','Coffee and cereal','Coffee and toast','Tea and fruit'], ans:2},
-  {q:'What does the speaker usually do in the evening on weekdays?', opts:['Go out with friends','Stay in and watch TV','Eat out at a restaurant','Do the shopping'], ans:1},
-  {q:'What time does the speaker usually go to bed?', opts:['9:00 pm','10:00 pm','10:30 pm','11:00 pm'], ans:2},
-  {q:'Who does a lot of the housework in the speaker\'s home?', opts:['The speaker','The speaker\'s mum','The cleaner','The speaker\'s sister'], ans:2},
+  const listeningQuizData = [
+  {q:'What does the speaker do first after getting out of bed?', opts:['Brushes her teeth','Gets dressed','Washes her face','Has breakfast'], ans:2},
+  {q:'What does the speaker usually drink for breakfast?', opts:['Milk','Coffee','Tea','Orange juice'], ans:3},
+  {q:'How does the speaker sometimes travel to school?', opts:['By bike','By bus','By taxi','On foot'], ans:1},
+  {q:'What is the speaker\'s favourite school subject?', opts:['Math','Science','English','History'], ans:2},
+  {q:'What does the speaker usually do first after arriving home?', opts:['Has dinner','Does her homework','Watches TV','Reads a book'], ans:1},
 ];
 let listeningAnswers={};
 function buildListeningQuiz() {
@@ -1174,141 +1160,6 @@ function checkGrammar() {
 function resetGrammar() {
   document.querySelectorAll('.grammar-opt').forEach(o=>o.classList.remove('selected','correct','incorrect','disabled'));
   document.getElementById('grammar-result').innerHTML='';
-}
-
-// ===== READING FILL IN THE BLANK =====
-const readingAnswers = [
-  "wake up",
-  "get up",
-  "make my bed",
-  "go to the bathroom",
-  "have a wash",
-  "clean my teeth",
-  "have a shower",
-  "have a bath",
-  "breakfast",
-  "lunch",
-  "feed the cat",
-  "do the shopping",
-  "doing my washing",
-  "go to bed",
-  "go to sleep"
-];
-
-function buildReadingQuiz() {
-
-  document.getElementById('reading-quiz').innerHTML = `
-
-  <div class="fill-blank-text">
-
-  During the week I usually (1)
-  <input type="text" id="blank-1"> at 7am.
-
-  The alarm rings and I (2)
-  <input type="text" id="blank-2"> a few minutes later.
-
-  I open the window and (3)
-  <input type="text" id="blank-3">
-
-  because I don't like a messy room.
-
-  Then I (4)
-  <input type="text" id="blank-4">.
-
-  I (5)
-  <input type="text" id="blank-5">,
-
-  (6)
-  <input type="text" id="blank-6">
-
-  and put on a bit of makeup.
-
-  When I have more time I (7)
-  <input type="text" id="blank-7">
-
-  but in the winter I sometimes (8)
-  <input type="text" id="blank-8">
-
-  instead of a shower to relax.
-
-  For (9)
-  <input type="text" id="blank-9">
-
-  I drink coffee and eat toast.
-
-  At work I have a light (10)
-  <input type="text" id="blank-10">
-
-  around 12.30, usually a salad or a sandwich.
-
-  When I arrive home I (11)
-  <input type="text" id="blank-11">
-
-  before I relax.
-
-  I usually (12)
-  <input type="text" id="blank-12">
-
-  with my mum on Saturday morning.
-
-  I also help with (13)
-  <input type="text" id="blank-13">
-
-  on Sunday, whites first, then colours.
-
-  At about 10.30pm I (14)
-  <input type="text" id="blank-14">,
-
-  read a little and finally (15)
-  <input type="text" id="blank-15">
-
-  straight away.
-
-  </div>
-  `;
-}
-
-function checkReadingQuiz() {
-
-  let score = 0;
-
-  readingAnswers.forEach((answer, index) => {
-
-    const input =
-      document.getElementById(`blank-${index + 1}`);
-
-    if (!input) return;
-
-    const studentAnswer =
-      input.value.trim().toLowerCase();
-
-    if (studentAnswer === answer.toLowerCase()) {
-
-      score++;
-      input.classList.add('correct');
-
-    } else {
-
-      input.classList.add('incorrect');
-
-    }
-
-  });
-
-  document.getElementById('reading-result').innerHTML =
-
-  `<div class="result-msg ${score===15?'success':'error'}">
-      ${score===15?'🎉 Excellent!':'📝 Keep practising!'}
-      Correct ${score}/15.
-   </div>`;
-}
-
-function resetReadingQuiz() {
-
-  buildReadingQuiz();
-
-  document.getElementById('reading-result').innerHTML='';
-
 }
 
 // ===== INIT =====
