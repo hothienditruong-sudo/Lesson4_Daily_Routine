@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 4 — Daily Routine</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-light: #dbeafe;
+    --secondary: #f59e0b;
+    --secondary-light: #fef3c7;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #1d4ed8 0%, #7c3aed 50%, #db2777 100%);
+    color: white; padding: 48px 24px 40px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/svg%3E"); }
+  .badge { display:inline-block; background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.3); padding:4px 16px; border-radius:100px; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:16px; }
+  .hero h1 { font-size:clamp(28px,5vw,48px); font-weight:900; margin-bottom:8px; text-shadow:0 2px 16px rgba(0,0,0,0.2); }
+  .hero p { font-size:16px; opacity:.85; margin-bottom:24px; }
+  .hero-meta { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .hero-meta span { background:rgba(255,255,255,0.15); border-radius:100px; padding:6px 18px; font-size:14px; font-weight:700; }
+
+  /* NAV */
+  .nav { background:white; border-bottom:2px solid var(--border); position:sticky; top:0; z-index:100; padding:0 24px; display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+  .nav::-webkit-scrollbar { display:none; }
+  .nav-btn { padding:14px 20px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:700; background:none; border:none; border-bottom:3px solid transparent; color:var(--muted); cursor:pointer; white-space:nowrap; transition:all .2s; }
+  .nav-btn:hover { color:var(--primary); }
+  .nav-btn.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+  /* SECTIONS */
+  .section { display:none; padding:32px 24px; max-width:1000px; margin:0 auto; }
+  .section.active { display:block; }
+  .section-title { font-size:22px; font-weight:900; margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+  .section-sub { color:var(--muted); margin-bottom:24px; font-size:15px; }
+
+  /* CARD */
+  .card { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; margin-bottom:20px; }
+
+  /* ====== WARMUP: IMAGE MATCH ====== */
+  .img-match-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px; margin-bottom:24px; }
+  .img-card {
+    border-radius:14px; border:3px solid var(--border); background:white; cursor:pointer;
+    transition:all .2s; overflow:hidden; position:relative;
+  }
+  .img-card:hover { border-color:var(--primary); transform:translateY(-2px); box-shadow:0 6px 20px rgba(37,99,235,.15); }
+  .img-card.selected { border-color:var(--secondary); background:var(--secondary-light); }
+  .img-card.correct { border-color:var(--green); background:var(--green-light); }
+  .img-card.incorrect { border-color:var(--red); background:var(--red-light); animation:shake .3s; }
+  .img-card-inner { padding:14px 10px; text-align:center; }
+  .img-card .big-emoji { font-size:44px; display:block; margin-bottom:8px; }
+  .img-card .img-label { font-size:12px; color:var(--muted); font-weight:700; }
+  .img-card .img-num { position:absolute; top:8px; left:10px; font-size:13px; font-weight:900; color:var(--primary); }
+  .answer-options { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+  .ans-chip {
+    padding:8px 18px; border-radius:100px; border:2px solid var(--border); background:white;
+    font-size:14px; font-weight:700; cursor:pointer; transition:all .2s;
+  }
+  .ans-chip:hover { border-color:var(--primary); background:var(--primary-light); color:var(--primary); }
+  .ans-chip.used { opacity:.4; pointer-events:none; text-decoration:line-through; }
+  .ans-chip.active-pick { border-color:var(--secondary); background:var(--secondary-light); }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* ====== VOCAB FLASHCARDS ====== */
+  .vfc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:16px; margin-bottom:20px; }
+  .vfc {
+    height:180px; perspective:800px; cursor:pointer;
+  }
+  .vfc-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .5s; }
+  .vfc.flipped .vfc-inner { transform:rotateY(180deg); }
+  .vfc-front, .vfc-back {
+    position:absolute; inset:0; border-radius:14px; backface-visibility:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:16px; text-align:center;
+  }
+  .vfc-front { background:linear-gradient(135deg,#dbeafe,#ede9fe); border:2px solid #c7d2fe; }
+  .vfc-front .vfc-emoji { font-size:36px; margin-bottom:8px; }
+  .vfc-front .vfc-word { font-size:15px; font-weight:800; color:var(--primary); }
+  .vfc-front .vfc-pron { font-size:12px; color:var(--purple); margin-top:4px; }
+  .vfc-back { background:linear-gradient(135deg,#7c3aed,#2563eb); color:white; transform:rotateY(180deg); }
+  .vfc-back .vfc-meaning { font-size:14px; font-weight:800; margin-bottom:6px; }
+  .vfc-back .vfc-example { font-size:12px; opacity:.85; line-height:1.5; }
+  .vfc-hint { text-align:center; color:var(--muted); font-size:13px; margin-bottom:16px; }
+
+  /* ====== VOCAB TABLE ====== */
+  .vocab-table { width:100%; border-collapse:collapse; font-size:14px; }
+  .vocab-table th { background:var(--primary); color:white; padding:12px 14px; text-align:left; font-weight:700; font-size:13px; }
+  .vocab-table th:first-child { border-radius:10px 0 0 0; }
+  .vocab-table th:last-child { border-radius:0 10px 0 0; }
+  .vocab-table td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  .vocab-table tr:nth-child(even) td { background:#f8fafc; }
+  .vocab-table tr:hover td { background:var(--primary-light); }
+  .vocab-table .word { font-weight:800; color:var(--primary); }
+  .vocab-table .pron { color:var(--purple); font-size:13px; }
+  .type-badge { display:inline-block; padding:2px 10px; border-radius:100px; font-size:11px; font-weight:700; text-transform:uppercase; }
+  .type-verb { background:#dcfce7; color:#16a34a; }
+  .type-noun { background:#dbeafe; color:#2563eb; }
+  .type-phrase { background:#ede9fe; color:#7c3aed; }
+  .type-adv { background:#fef3c7; color:#b45309; }
+  .type-pv { background:#fce7f3; color:#be185d; }
+  .search-bar { display:flex; gap:10px; margin-bottom:16px; }
+  .search-bar input { flex:1; padding:10px 16px; border:2px solid var(--border); border-radius:10px; font-family:'Nunito',sans-serif; font-size:14px; outline:none; transition:border-color .2s; }
+  .search-bar input:focus { border-color:var(--primary); }
+
+  /* ====== ACTIVITY TABS ====== */
+  .activity-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  .activity-tab { padding:8px 18px; border-radius:100px; border:2px solid var(--border); font-family:'Nunito',sans-serif; font-size:13px; font-weight:700; cursor:pointer; background:white; color:var(--muted); transition:all .2s; }
+  .activity-tab.active { background:var(--primary); border-color:var(--primary); color:white; }
+  .activity-panel { display:none; }
+  .activity-panel.active { display:block; }
+
+  /* Fill in blanks */
+  .fill-sentence { font-size:15px; line-height:2.4; margin-bottom:14px; padding:16px 20px; background:#f8fafc; border-radius:12px; border-left:4px solid var(--primary); }
+  .blank-input { display:inline-block; border:none; border-bottom:2px solid var(--primary); background:transparent; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; color:var(--primary); width:140px; padding:2px 4px; outline:none; text-align:center; }
+  .blank-input.correct { border-bottom-color:var(--green); color:var(--green); }
+  .blank-input.incorrect { border-bottom-color:var(--red); color:var(--red); }
+
+  /* Word sort */
+  .word-bank { display:flex; flex-wrap:wrap; gap:8px; padding:14px; background:#f1f5f9; border-radius:12px; margin-bottom:12px; min-height:54px; }
+  .word-chip { padding:6px 14px; background:white; border:2px solid var(--border); border-radius:100px; font-size:14px; font-weight:700; cursor:pointer; user-select:none; transition:all .2s; }
+  .word-chip:hover { border-color:var(--primary); background:var(--primary-light); }
+  .word-chip.used { opacity:.35; pointer-events:none; }
+  .sort-target { min-height:46px; border:2px dashed var(--border); border-radius:10px; padding:8px 12px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; background:white; transition:all .2s; }
+  .placed-chip { padding:4px 12px; background:var(--primary-light); color:var(--primary); border-radius:100px; font-size:13px; font-weight:700; cursor:pointer; }
+
+  /* Match */
+  .match-container { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .match-col h3 { font-size:13px; font-weight:700; color:var(--muted); margin-bottom:8px; }
+  .match-item { padding:10px 14px; border-radius:10px; border:2px solid var(--border); cursor:pointer; font-size:14px; font-weight:600; transition:all .2s; background:white; user-select:none; margin-bottom:8px; }
+  .match-item:hover { border-color:var(--primary); background:var(--primary-light); }
+  .match-item.selected { border-color:var(--secondary); background:var(--secondary-light); }
+  .match-item.correct { border-color:var(--green); background:var(--green-light); color:var(--green); pointer-events:none; }
+  .match-item.incorrect { border-color:var(--red); background:var(--red-light); animation:shake .3s; }
+
+  /* Quiz */
+  .quiz-item { margin-bottom:20px; }
+  .quiz-question { font-size:15px; font-weight:700; margin-bottom:10px; }
+  .quiz-options { display:flex; flex-direction:column; gap:8px; }
+  .quiz-option { padding:10px 16px; border:2px solid var(--border); border-radius:10px; cursor:pointer; font-size:14px; font-weight:600; transition:all .2s; background:white; }
+  .quiz-option:hover:not(.disabled) { border-color:var(--primary); background:var(--primary-light); }
+  .quiz-option.correct { border-color:var(--green); background:var(--green-light); color:var(--green); }
+  .quiz-option.incorrect { border-color:var(--red); background:var(--red-light); color:var(--red); }
+  .quiz-option.disabled { pointer-events:none; }
+  .quiz-option.selected { border-color:var(--secondary); background:var(--secondary-light); }
+
+  /* Grammar box */
+  .grammar-box { background:linear-gradient(135deg,var(--primary-light),var(--purple-light)); border-radius:14px; padding:20px 24px; margin-bottom:16px; border-left:5px solid var(--primary); }
+  .grammar-box h3 { font-size:16px; font-weight:800; margin-bottom:10px; color:var(--primary); }
+  .grammar-rule { font-size:15px; padding:8px 0; border-bottom:1px solid rgba(37,99,235,.15); }
+  .grammar-rule:last-child { border-bottom:none; }
+  .g-hl { color:var(--purple); font-weight:800; }
+
+  /* Freq table */
+  .freq-table { width:100%; border-collapse:collapse; margin-bottom:20px; }
+  .freq-table th { background:var(--secondary); color:white; padding:10px 14px; text-align:left; font-size:13px; }
+  .freq-table td { padding:10px 14px; border-bottom:1px solid var(--border); }
+  .freq-bar-bg { background:var(--border); border-radius:100px; height:8px; width:100%; margin-top:4px; }
+  .freq-bar { background:linear-gradient(90deg,var(--secondary),var(--primary)); height:8px; border-radius:100px; }
+  .progress-bar-container { background:var(--border); border-radius:100px; height:6px; margin-bottom:20px; overflow:hidden; }
+  .progress-bar-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--purple)); border-radius:100px; transition:width .5s; }
+
+  /* Dialogue */
+  .audio-player { background:linear-gradient(135deg,#1e293b,#334155); border-radius:16px; padding:24px; color:white; margin-bottom:20px; text-align:center; }
+  .dialogue-script { display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
+  .bubble { max-width:75%; padding:12px 18px; border-radius:18px; font-size:15px; line-height:1.6; }
+  .bubble-a { background:var(--primary-light); border-bottom-left-radius:4px; align-self:flex-start; }
+  .bubble-b { background:var(--secondary-light); border-bottom-right-radius:4px; align-self:flex-end; text-align:right; }
+  .bubble-label { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; color:var(--muted); }
+
+  /* Buttons */
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:100px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; border:none; cursor:pointer; transition:all .2s; }
+  .btn-primary { background:var(--primary); color:white; }
+  .btn-primary:hover { background:#1d4ed8; transform:translateY(-1px); }
+  .btn-secondary { background:white; color:var(--text); border:2px solid var(--border); }
+  .btn-secondary:hover { border-color:var(--primary); color:var(--primary); }
+  .score-badge { display:inline-flex; align-items:center; gap:6px; background:var(--green-light); color:var(--green); padding:8px 20px; border-radius:100px; font-weight:800; font-size:15px; margin:10px 0; }
+  .result-msg { padding:12px 16px; border-radius:10px; font-weight:700; margin-top:10px; }
+  .result-msg.success { background:var(--green-light); color:var(--green); }
+  .result-msg.error { background:var(--red-light); color:var(--red); }
+
+  /* Writing */
+  .writing-prompt { background:linear-gradient(135deg,#fef3c7,#fce7f3); border-radius:14px; padding:20px 24px; margin-bottom:16px; border-left:5px solid var(--secondary); }
+  .writing-prompt h3 { font-size:16px; font-weight:800; color:#b45309; margin-bottom:10px; }
+
+  @media (max-width:600px) {
+    .match-container { grid-template-columns:1fr; }
+    .vfc-grid { grid-template-columns:repeat(2,1fr); }
+    .img-match-grid { grid-template-columns:repeat(2,1fr); }
+    .section { padding:20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">📘 Lesson 4 · A1 → A2</div>
+  <h1>⏰ Daily Routine</h1>
+  <p>Talking about your daily routine — morning, afternoon & evening</p>
+  <div class="hero-meta">
+    <span>⏱ 90 minutes</span>
+    <span>🎯 Listening · Speaking</span>
+    <span>👤 1–2 students</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('warmup',this)">🔥 Khởi động</button>
+  <button class="nav-btn" onclick="showSection('vocab',this)">📖 Từ mới</button>
+  <button class="nav-btn" onclick="showSection('activities',this)">🎮 Hoạt động</button>
+  <button class="nav-btn" onclick="showSection('grammar',this)">📝 Ngữ pháp</button>
+  <button class="nav-btn" onclick="showSection('dialogue',this)">🎙️ Hội thoại</button>
+</nav>
+
+<!-- ===================== WARMUP ===================== -->
+<section id="warmup" class="section active">
+  <div class="section-title">🔥 Khởi động</div>
+  <div class="section-sub">Nhìn vào hình ảnh và chọn đáp án chữ (A–F) tương ứng với mỗi hoạt động!</div>
+
+  <div class="card">
+    <h3 style="font-size:16px; font-weight:800; margin-bottom:6px;">📌 Task: Match the pictures to the activities</h3>
+    <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">Nhấn vào một hình, sau đó chọn đáp án A–F phù hợp.</p>
+
+    <div class="img-match-grid" id="warmup-images"></div>
+
+    <div style="margin-bottom:12px; font-weight:700; font-size:14px; color:var(--muted);">🔤 Đáp án (A – F):</div>
+    <div class="answer-options" id="warmup-answers"></div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+      <button class="btn btn-primary" onclick="checkWarmup()">✅ Kiểm tra</button>
+      <button class="btn btn-secondary" onclick="resetWarmup()">🔄 Chơi lại</button>
+    </div>
+    <div id="warmup-score" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:16px; font-weight:800; margin-bottom:16px;">💬 Câu hỏi gợi ý — Basic Questions</div>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="background:#f8fafc; border-radius:10px; padding:14px 18px;">
+        <div style="font-weight:800; color:var(--primary); margin-bottom:4px;">1. What time do you usually wake up in the morning?</div>
+        <input type="text" placeholder="Your answer..." style="width:100%;border:none;border-bottom:2px solid var(--border);background:transparent;font-family:Nunito,sans-serif;font-size:14px;padding:6px 0;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px 18px;">
+        <div style="font-weight:800; color:var(--primary); margin-bottom:4px;">2. What do you do first in the morning?</div>
+        <input type="text" placeholder="Your answer..." style="width:100%;border:none;border-bottom:2px solid var(--border);background:transparent;font-family:Nunito,sans-serif;font-size:14px;padding:6px 0;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px 18px;">
+        <div style="font-weight:800; color:var(--primary); margin-bottom:4px;">3. What do you usually have for breakfast?</div>
+        <input type="text" placeholder="Your answer..." style="width:100%;border:none;border-bottom:2px solid var(--border);background:transparent;font-family:Nunito,sans-serif;font-size:14px;padding:6px 0;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px 18px;">
+        <div style="font-weight:800; color:var(--primary); margin-bottom:4px;">4. What do you do after work?</div>
+        <input type="text" placeholder="Your answer..." style="width:100%;border:none;border-bottom:2px solid var(--border);background:transparent;font-family:Nunito,sans-serif;font-size:14px;padding:6px 0;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="background:#f8fafc; border-radius:10px; padding:14px 18px;">
+        <div style="font-weight:800; color:var(--primary); margin-bottom:4px;">5. What time do you go to bed?</div>
+        <input type="text" placeholder="Your answer..." style="width:100%;border:none;border-bottom:2px solid var(--border);background:transparent;font-family:Nunito,sans-serif;font-size:14px;padding:6px 0;outline:none;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VOCAB ===================== -->
+<section id="vocab" class="section">
+  <div class="section-title">📖 Từ mới — Vocabulary</div>
+  <div class="section-sub">Nhấn vào thẻ để lật xem nghĩa & ví dụ. 28 từ & cụm từ về thói quen hàng ngày.</div>
+
+  <p class="vfc-hint">👆 Nhấn vào thẻ để lật — xem nghĩa & ví dụ</p>
+  <div class="vfc-grid" id="vfc-grid"></div>
+
+  <div style="margin-bottom:16px; display:flex; gap:10px; flex-wrap:wrap;">
+    <button class="btn btn-secondary" onclick="flipAllVfc(true)">👁️ Lật tất cả</button>
+    <button class="btn btn-secondary" onclick="flipAllVfc(false)">🔄 Úp lại</button>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="vocab-search" placeholder="🔍 Tìm từ..." oninput="filterVocab(this.value)">
+  </div>
+  <div class="card" style="padding:0; overflow:auto;">
+    <table class="vocab-table">
+      <thead>
+        <tr>
+          <th>Word / Phrase</th><th>Pronunciation</th><th>Type</th><th>Meaning (Nghĩa)</th><th>Example Sentence</th>
+        </tr>
+      </thead>
+      <tbody id="vocab-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===================== ACTIVITIES ===================== -->
+<section id="activities" class="section">
+  <div class="section-title">🎮 Hoạt động luyện tập</div>
+  <div class="section-sub">Từ vựng · Ngữ pháp · Frequency Adverbs · Nghe · Viết</div>
+
+  <div class="activity-tabs">
+    <button class="activity-tab active" onclick="showActivity('fill',this)">✏️ Từ vựng: Điền từ</button>
+    <button class="activity-tab" onclick="showActivity('match',this)">🔗 Ghép từ</button>
+    <button class="activity-tab" onclick="showActivity('sort',this)">🔀 Sắp xếp câu</button>
+    <button class="activity-tab" onclick="showActivity('gramfill',this)">📝 Ngữ pháp</button>
+    <button class="activity-tab" onclick="showActivity('freqact',this)">📊 Frequency</button>
+    <button class="activity-tab" onclick="showActivity('quiz',this)">❓ Trắc nghiệm</button>
+    <button class="activity-tab" onclick="showActivity('listening',this)">🎧 Nghe</button>
+    <button class="activity-tab" onclick="showActivity('writing',this)">✍️ Viết</button>
+  </div>
+
+  <!-- VOCAB FILL -->
+  <div class="activity-panel active" id="act-fill">
+    <div class="card">
+      <h3 style="font-size:17px; font-weight:800; margin-bottom:6px;">✏️ Task 1: Vocabulary Practice</h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">Điền từ/cụm từ thích hợp vào chỗ trống.</p>
+      <div id="fill-sentences"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        <button class="btn btn-primary" onclick="checkFill()">✅ Kiểm tra</button>
+        <button class="btn btn-secondary" onclick="resetFill()">🔄 Làm lại</button>
+      </div>
+      <div id="fill-result" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <!-- MATCH -->
+  <div class="activity-panel" id="act-match">
+    <div class="card">
+      <h3 style="font-size:17px; font-weight:800; margin-bottom:6px;">🔗 Ghép từ với nghĩa đúng</h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Nhấn vào một từ ở cột trái, sau đó nhấn nghĩa tương ứng ở cột phải.</p>
+      <div id="match-score" style="margin-bottom:12px;"></div>
+      <div class="match-container">
+        <div class="match-col"><h3>🔤 Từ</h3><div id="match-words"></div></div>
+        <div class="match-col"><h3>📖 Nghĩa</h3><div id="match-defs"></div></div>
+      </div>
+      <button class="btn btn-secondary" style="margin-top:12px;" onclick="initMatch()">🔄 Chơi lại</button>
+    </div>
+  </div>
+
+  <!-- SORT -->
+  <div class="activity-panel" id="act-sort">
+    <div class="card">
+      <h3 style="font-size:17px; font-weight:800; margin-bottom:6px;">🔀 Sắp xếp từ thành câu hoàn chỉnh</h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Nhấn vào từng từ theo đúng thứ tự để tạo câu.</p>
+      <div id="sort-questions"></div>
+    </div>
+  </div>
+
+  <!-- GRAMMAR FILL -->
+  <div class="activity-panel" id="act-gramfill">
+    <div class="card">
+      <h3 style="font-size:17px; font-weight:800; margin-bottom:6px;">📝 Task 2: Grammar Practice — Present Simple</h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">Chia động từ trong ngoặc đúng thì Present Simple.</p>
+      <div id="gram-fill-sentences"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        <button class="btn btn-primary" onclick="checkGramFill()">✅ Kiểm tra</button>
+        <button class="btn btn-secondary" onclick="resetGramFill()">🔄 Làm lại</button>
+      </div>
+      <div id="gram-fill-result" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <!-- FREQUENCY ADVERBS ACTIVITY -->
+  <div class="activity-panel" id="act-freqact">
+    <div class="card">
+      <h3 style="font-size:17px; font-weight:800; margin-bottom:6px;">📊 Task 3: Frequency Adverbs</h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:18px;">Chọn trạng từ tần suất đúng cho mỗi câu.</p>
+      <div id="freq-act-sentences"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        <button class="btn btn-primary" onclick="checkFreqAct()">✅ Kiểm tra</button>
+        <button class="btn btn-secondary" onclick="resetFreqAct()">🔄 Làm lại</button>
+      </div>
+      <div id="freq-act-result" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <!-- VOCAB QUIZ -->
+  <div class="activity-panel" id="act-quiz">
+    <div class="card">
+      <h3 style="font-size:17px; font-weight:800; margin-bottom:16px;">❓ Trắc nghiệm từ vựng</h3>
+      <div id="quiz-progress-bar" class="progress-bar-container"><div class="progress-bar-fill" style="width:0%"></div></div>
+      <div id="quiz-items"></div>
+      <div id="quiz-total" style="margin-top:16px;"></div>
+    </div>
+  </div>
+
+  <!-- LISTENING -->
+  <div class="activity-panel" id="act-listening">
+    <div class="card">
+      <h3 style="font-size:17px; font-weight:800; margin-bottom:6px;">🎧 Luyện nghe — Listening Practice</h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Xem video, nghe và trả lời câu hỏi bên dưới.</p>
+
+      <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:14px; margin-bottom:20px; box-shadow:var(--shadow);">
+        <iframe style="position:absolute; top:0; left:0; width:100%; height:100%;"
+          src="https://www.youtube.com/embed/06STpsZ1RRA"
+          title="My Daily Routine in English – Easy Listening A1–A2"
+          frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+
+      <div style="background:var(--primary-light); border-radius:12px; padding:14px 18px; margin-bottom:20px; font-size:14px;">
+        <strong>📌 Hướng dẫn:</strong> Xem video 1–2 lần rồi trả lời các câu hỏi bên dưới. Bạn có thể tạm dừng để ghi chú.
+      </div>
+
+      <div id="listening-quiz"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        <button class="btn btn-primary" onclick="checkListeningQuiz()">✅ Kiểm tra</button>
+        <button class="btn btn-secondary" onclick="resetListeningQuiz()">🔄 Làm lại</button>
+      </div>
+      <div id="listening-result" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:16px; font-weight:800; margin-bottom:12px;">📝 Fill in the blanks — Điền vào bài nghe gốc</h3>
+      <p style="color:var(--muted); font-size:14px; margin-bottom:14px;">Nghe audio bài học và điền vào chỗ trống trong đoạn văn:</p>
+      <div class="fill-sentence" style="line-height:2.4;">
+        During the week I usually <input class="blank-input" style="width:110px" data-ans="wake up" placeholder="(1)___"> at 7am. The alarm rings and I <input class="blank-input" style="width:90px" data-ans="get up" placeholder="(2)___"> a few minutes later. I open the window and <input class="blank-input" style="width:120px" data-ans="make my bed" placeholder="(3)___"> because I don't like a messy room. Then I <input class="blank-input" style="width:120px" data-ans="have a shower" placeholder="(4)___">. I <input class="blank-input" style="width:120px" data-ans="clean my teeth" placeholder="(5)___"> and put on a bit of makeup. For breakfast I drink coffee and eat toast. At work I have a light <input class="blank-input" style="width:80px" data-ans="lunch" placeholder="(6)___"> around 12.30. In the evening I sometimes <input class="blank-input" style="width:80px" data-ans="eat out" placeholder="(7)___"> with friends. At about 10.30pm I <input class="blank-input" style="width:80px" data-ans="go to bed" placeholder="(8)___"> and finally <input class="blank-input" style="width:110px" data-ans="go to sleep" placeholder="(9)___"> straight away.
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+        <button class="btn btn-primary" onclick="checkListenFill()">✅ Kiểm tra</button>
+        <button class="btn btn-secondary" onclick="resetListenFill()">🔄 Làm lại</button>
+      </div>
+      <div id="listen-fill-result" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- WRITING -->
+  <div class="activity-panel" id="act-writing">
+    <div class="card">
+      <div class="writing-prompt">
+        <h3>✍️ Writing Task — Giới thiệu thói quen của bạn</h3>
+        <p style="font-size:14px; color:#92400e; line-height:1.7;">
+          Viết một đoạn văn (80–120 từ) về thói quen hàng ngày của bạn.<br>
+          Sử dụng: <strong>Present Simple + Frequency Adverbs</strong>
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin-bottom:20px;">
+        <div style="background:var(--primary-light); padding:14px; border-radius:12px; border-top:3px solid var(--primary);">
+          <div style="font-weight:800; color:var(--primary); margin-bottom:8px;">🌅 Morning</div>
+          <div style="font-size:13px; line-height:1.9;">• wake up / get up<br>• have a shower<br>• clean my teeth<br>• have breakfast</div>
+        </div>
+        <div style="background:var(--secondary-light); padding:14px; border-radius:12px; border-top:3px solid var(--secondary);">
+          <div style="font-weight:800; color:#b45309; margin-bottom:8px;">☀️ Afternoon</div>
+          <div style="font-size:13px; line-height:1.9;">• have a light lunch<br>• have a snack<br>• work / study<br>• do the shopping</div>
+        </div>
+        <div style="background:var(--purple-light); padding:14px; border-radius:12px; border-top:3px solid var(--purple);">
+          <div style="font-weight:800; color:var(--purple); margin-bottom:8px;">🌙 Evening</div>
+          <div style="font-size:13px; line-height:1.9;">• stay in / go out<br>• eat out<br>• chat with friends<br>• go to bed</div>
+        </div>
+      </div>
+
+      <div style="background:#f8fafc; border-radius:12px; padding:14px 18px; margin-bottom:16px;">
+        <div style="font-weight:800; margin-bottom:8px; font-size:14px;">🔗 Useful connectors:</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; font-size:13px;">
+          <span style="background:white; border:1px solid var(--border); padding:4px 12px; border-radius:100px;">First...</span>
+          <span style="background:white; border:1px solid var(--border); padding:4px 12px; border-radius:100px;">Then...</span>
+          <span style="background:white; border:1px solid var(--border); padding:4px 12px; border-radius:100px;">After that...</span>
+          <span style="background:white; border:1px solid var(--border); padding:4px 12px; border-radius:100px;">Next...</span>
+          <span style="background:white; border:1px solid var(--border); padding:4px 12px; border-radius:100px;">In the afternoon...</span>
+          <span style="background:white; border:1px solid var(--border); padding:4px 12px; border-radius:100px;">In the evening...</span>
+          <span style="background:white; border:1px solid var(--border); padding:4px 12px; border-radius:100px;">Finally...</span>
+        </div>
+      </div>
+
+      <div style="background:var(--green-light); border-radius:10px; padding:12px 16px; margin-bottom:12px; font-size:14px;">
+        <strong>📌 Example opener:</strong> <em>I usually wake up at 6:30 a.m. Then I brush my teeth and take a shower. I have breakfast at 7 o'clock. After that, I go to work…</em>
+      </div>
+
+      <textarea id="writing-area" style="width:100%; height:180px; padding:16px; border:2px solid var(--border); border-radius:12px; font-family:Nunito,sans-serif; font-size:14px; outline:none; resize:vertical; line-height:1.7;" placeholder="Viết đoạn văn của bạn tại đây..." onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'" oninput="countWords()"></textarea>
+      <div style="text-align:right; margin-top:6px; font-size:13px; color:var(--muted);">
+        <span id="word-count">0</span> từ <span style="opacity:.6;">/ mục tiêu: 80–120</span>
+      </div>
+
+      <div style="margin-top:14px;">
+        <div style="font-weight:800; margin-bottom:10px; font-size:14px;">❓ Follow-up Questions — Luyện nói:</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">1. What time do you wake up on weekdays vs weekends?</div>
+          <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">2. What is your favourite meal of the day?</div>
+          <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">3. How many hours do you sleep every night?</div>
+          <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">4. Do you think your routine is healthy? Why / Why not?</div>
+          <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">5. What habit would you like to change?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GRAMMAR ===================== -->
+<section id="grammar" class="section">
+  <div class="section-title">📝 Ngữ pháp trọng tâm</div>
+  <div class="section-sub">Present Simple for Daily Routines + Frequency Adverbs</div>
+
+  <div class="grammar-box">
+    <h3>1️⃣ Present Simple — Cấu trúc</h3>
+    <div class="grammar-rule">
+      <span class="g-hl">Khẳng định (+):</span> &nbsp;
+      I / You / We / They + <span class="g-hl">Verb (nguyên mẫu)</span> &nbsp;|&nbsp;
+      He / She / It + <span class="g-hl">Verb + s/es</span>
+    </div>
+    <div class="grammar-rule">
+      <span class="g-hl">Phủ định (−):</span> &nbsp;
+      I/You/We/They + <span class="g-hl">don't</span> + V &nbsp;|&nbsp;
+      He/She/It + <span class="g-hl">doesn't</span> + V
+    </div>
+    <div class="grammar-rule">
+      <span class="g-hl">Câu hỏi (?):</span> &nbsp;
+      <span class="g-hl">Do</span> + I/You/We/They + V? &nbsp;|&nbsp;
+      <span class="g-hl">Does</span> + He/She/It + V?
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="font-size:15px; font-weight:800; margin-bottom:12px;">💡 Ví dụ minh hoạ</div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="background:var(--green-light); padding:10px 16px; border-radius:10px; font-size:14px;">✅ I <strong>wake up</strong> at 7 a.m. every day.</div>
+      <div style="background:var(--green-light); padding:10px 16px; border-radius:10px; font-size:14px;">✅ She <strong>goes</strong> to work at 8 a.m.</div>
+      <div style="background:var(--green-light); padding:10px 16px; border-radius:10px; font-size:14px;">✅ He <strong>watches</strong> TV in the evening.</div>
+      <div style="background:var(--red-light); padding:10px 16px; border-radius:10px; font-size:14px;">❌ I <strong>don't</strong> watch TV in the morning.</div>
+      <div style="background:var(--red-light); padding:10px 16px; border-radius:10px; font-size:14px;">❌ She <strong>doesn't</strong> eat breakfast at home.</div>
+      <div style="background:var(--primary-light); padding:10px 16px; border-radius:10px; font-size:14px;">❓ <strong>Do</strong> you work on weekends? — Yes, I <strong>do</strong>. / No, I <strong>don't</strong>.</div>
+      <div style="background:var(--primary-light); padding:10px 16px; border-radius:10px; font-size:14px;">❓ <strong>Does</strong> your mother cook every day? — Yes, she <strong>does</strong>.</div>
+    </div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#fff7ed,#fef3c7); border-radius:14px; padding:16px 20px; margin-bottom:16px; border-left:5px solid var(--secondary);">
+    <div style="font-size:15px; font-weight:800; color:#b45309; margin-bottom:10px;">⚠️ Quy tắc thêm -s / -es / -ies</div>
+    <div style="display:flex; flex-direction:column; gap:6px; font-size:14px;">
+      <div>• Thông thường: + <strong>s</strong> &nbsp;→&nbsp; work<strong>s</strong>, eat<strong>s</strong></div>
+      <div>• Tận cùng -ch/-sh/-s/-x/-o: + <strong>es</strong> &nbsp;→&nbsp; watch<strong>es</strong>, go<strong>es</strong></div>
+      <div>• Tận cùng phụ âm + y: đổi <strong>y → ies</strong> &nbsp;→&nbsp; stud<strong>ies</strong>, carr<strong>ies</strong></div>
+    </div>
+  </div>
+
+  <div class="grammar-box" style="background:linear-gradient(135deg,var(--secondary-light),#fef9c3);">
+    <h3 style="color:#b45309;">2️⃣ Frequency Adverbs — Trạng từ tần suất</h3>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">
+      Vị trí: <strong>TRƯỚC</strong> động từ chính &nbsp;|&nbsp; <strong>SAU</strong> động từ "be"
+    </p>
+    <table class="freq-table">
+      <thead><tr><th>Adverb</th><th>Tần suất</th><th>Ví dụ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Always</strong></td><td><div class="freq-bar-bg"><div class="freq-bar" style="width:100%"></div></div>100%</td><td><em>I <strong>always</strong> brush my teeth.</em></td></tr>
+        <tr><td><strong>Usually</strong></td><td><div class="freq-bar-bg"><div class="freq-bar" style="width:80%"></div></div>~80%</td><td><em>She <strong>usually</strong> wakes up at 7.</em></td></tr>
+        <tr><td><strong>Often</strong></td><td><div class="freq-bar-bg"><div class="freq-bar" style="width:60%"></div></div>~60%</td><td><em>He <strong>often</strong> has a snack.</em></td></tr>
+        <tr><td><strong>Sometimes</strong></td><td><div class="freq-bar-bg"><div class="freq-bar" style="width:40%"></div></div>~40%</td><td><em>We <strong>sometimes</strong> eat out.</em></td></tr>
+        <tr><td><strong>Rarely</strong></td><td><div class="freq-bar-bg"><div class="freq-bar" style="width:20%"></div></div>~20%</td><td><em>I <strong>rarely</strong> stay up late.</em></td></tr>
+        <tr><td><strong>Never</strong></td><td><div class="freq-bar-bg"><div class="freq-bar" style="width:2%"></div></div>0%</td><td><em>She <strong>never</strong> skips breakfast.</em></td></tr>
+      </tbody>
+    </table>
+    <div style="background:rgba(255,255,255,0.6); border-radius:10px; padding:12px 16px; font-size:14px;">
+      <strong>📌 Vị trí:</strong><br>
+      ✅ I <strong>always</strong> wake up early. &nbsp;&nbsp; ✅ She is <strong>usually</strong> happy.<br>
+      ❌ I wake up <strong>always</strong> early. &nbsp;&nbsp; ❌ <strong>Always</strong> she wakes up early.
+    </div>
+  </div>
+
+  <!-- Grammar quiz -->
+  <div class="card">
+    <div style="font-size:17px; font-weight:800; margin-bottom:16px;">🏋️ Grammar Practice Quiz</div>
+    <div id="grammar-quiz"></div>
+    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="checkGrammar()">✅ Kiểm tra</button>
+      <button class="btn btn-secondary" onclick="resetGrammar()">🔄 Làm lại</button>
+    </div>
+    <div id="grammar-result" style="margin-top:12px;"></div>
+  </div>
+</section>
+
+<!-- ===================== DIALOGUE ===================== -->
+<section id="dialogue" class="section">
+  <div class="section-title">🎙️ Hội thoại</div>
+  <div class="section-sub">Nghe và luyện tập hội thoại về thói quen hàng ngày</div>
+
+  <div class="audio-player">
+    <div style="font-size:48px; margin-bottom:8px;">🎧</div>
+    <div style="font-size:16px; font-weight:700; margin-bottom:4px;">Daily Routine — Audio Bài học</div>
+    <div style="font-size:13px; opacity:.7; margin-bottom:14px;">Bài nghe gốc từ giáo viên</div>
+    <a href="https://drive.google.com/file/d/1U-8D2Q70-wv4bECdr_b1pF2jMmMWG_JA/view?usp=drive_link" target="_blank"
+      style="display:inline-block; padding:10px 24px; background:var(--secondary); color:white; border-radius:100px; text-decoration:none; font-weight:800; font-size:14px;">
+      ▶️ Mở file nghe
+    </a>
+  </div>
+
+  <!-- Dialogue script -->
+  <div class="card">
+    <div style="font-size:16px; font-weight:800; margin-bottom:16px;">💬 Mẫu hội thoại luyện tập</div>
+    <div class="dialogue-script">
+      <div><div class="bubble-label">👤 A — Interviewer</div>
+        <div class="bubble bubble-a">What time do you usually wake up in the morning?</div></div>
+      <div style="align-self:flex-end;"><div class="bubble-label" style="text-align:right">👤 B — Speaker</div>
+        <div class="bubble bubble-b">I usually wake up at 7 o'clock. I don't get up straight away — I stay in bed for a few minutes first!</div></div>
+      <div><div class="bubble-label">👤 A</div>
+        <div class="bubble bubble-a">What do you do in the morning before work?</div></div>
+      <div style="align-self:flex-end;"><div class="bubble-label" style="text-align:right">👤 B</div>
+        <div class="bubble bubble-b">First, I have a shower. Then I clean my teeth and put on a bit of make-up. After that, I have breakfast — usually coffee and toast.</div></div>
+      <div><div class="bubble-label">👤 A</div>
+        <div class="bubble bubble-a">Do you usually cook dinner at home?</div></div>
+      <div style="align-self:flex-end;"><div class="bubble-label" style="text-align:right">👤 B</div>
+        <div class="bubble bubble-b">Sometimes. But on busy days my mum doesn't bother to cook, so we order a takeaway. It's quick and delicious!</div></div>
+      <div><div class="bubble-label">👤 A</div>
+        <div class="bubble bubble-a">What do you usually do in the evening?</div></div>
+      <div style="align-self:flex-end;"><div class="bubble-label" style="text-align:right">👤 B</div>
+        <div class="bubble bubble-b">I usually stay in and watch TV. At weekends I sometimes go out or eat out. I always go to bed at about 10:30 pm and go to sleep straight away.</div></div>
+    </div>
+  </div>
+
+  <!-- Reading tasks -->
+  <div class="card">
+    <div style="font-size:16px; font-weight:800; margin-bottom:12px;">📖 Reading Comprehension</div>
+    <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">Đọc đoạn văn trong bài và chọn đáp án đúng:</p>
+    <div id="reading-quiz"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+      <button class="btn btn-primary" onclick="checkReadingQuiz()">✅ Kiểm tra</button>
+      <button class="btn btn-secondary" onclick="resetReadingQuiz()">🔄 Làm lại</button>
+    </div>
+    <div id="reading-result" style="margin-top:12px;"></div>
+  </div>
+
+  <!-- Speaking practice -->
+  <div class="card">
+    <div style="font-size:16px; font-weight:800; margin-bottom:12px;">🗣️ Speaking Practice</div>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">1. What time do you wake up on weekdays?</div>
+      <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">2. What do you usually have for breakfast?</div>
+      <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">3. Do you usually cook your own meals?</div>
+      <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">4. What do you do after work/school?</div>
+      <div style="background:#f1f5f9; border-radius:10px; padding:11px 16px; font-size:14px; font-weight:700; color:var(--primary);">5. Are you happy with your daily routine?</div>
+    </div>
+  </div>
+
+  <!-- Wrap up -->
+  <div class="card" style="background:linear-gradient(135deg,#dcfce7,#d1fae5);">
+    <div style="font-size:17px; font-weight:800; margin-bottom:14px;">✅ Wrap Up — Kiểm tra bản thân</div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <label style="display:flex; align-items:center; gap:12px; cursor:pointer; font-size:15px; font-weight:700;">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
+        I can talk about my daily routine.
+      </label>
+      <label style="display:flex; align-items:center; gap:12px; cursor:pointer; font-size:15px; font-weight:700;">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
+        I can use the Present Simple correctly.
+      </label>
+      <label style="display:flex; align-items:center; gap:12px; cursor:pointer; font-size:15px; font-weight:700;">
+        <input type="checkbox" style="width:20px;height:20px;accent-color:var(--green);cursor:pointer;">
+        I can use frequency adverbs (always, usually, often...).
+      </label>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== JS ===================== -->
+<script>
+// ===== DATA =====
+const vocabData = [
+  { word:'wake up', pron:'/ˈweɪk ʌp/', type:'verb', meaning:'Ngừng ngủ / thức dậy', example:'I <strong>wake up</strong> at 7:00 every day.' },
+  { word:'get up', pron:'/ˈɡet ʌp/', type:'verb', meaning:'Rời khỏi giường sau khi ngủ', example:'I <strong>get up</strong> and go to the kitchen.' },
+  { word:'go to bed', pron:'/ɡəʊ tə bed/', type:'phrase', meaning:'Đi ngủ (lên giường)', example:'I <strong>go to bed</strong> at 10:30 pm.' },
+  { word:'go to sleep', pron:'/ɡəʊ tə sliːp/', type:'phrase', meaning:'Bắt đầu ngủ', example:'I usually <strong>go to sleep</strong> quickly.' },
+  { word:'straight away', pron:'/streɪt əˈweɪ/', type:'adv', meaning:'Ngay lập tức', example:'I fall asleep <strong>straight away</strong>.' },
+  { word:'have a late night', pron:'/hæv ə leɪt naɪt/', type:'phrase', meaning:'Thức khuya', example:'I <strong>have a late night</strong> on Fridays.' },
+  { word:'have a sleep', pron:'/hæv ə sliːp/', type:'phrase', meaning:'Ngủ một giấc ngắn ban ngày', example:'I sometimes <strong>have a sleep</strong> after lunch.' },
+  { word:'have a light lunch', pron:'/hæv ə laɪt lʌntʃ/', type:'phrase', meaning:'Ăn bữa trưa nhẹ', example:'I usually <strong>have a light lunch</strong> at work.' },
+  { word:'snack', pron:'/snæk/', type:'noun', meaning:'Đồ ăn nhẹ giữa các bữa', example:'I eat a <strong>snack</strong> in the afternoon.' },
+  { word:"doesn't bother", pron:"/ˈdʌznt ˈbɒðə/", type:'phrase', meaning:'Không buồn làm gì vì lười/mệt', example:"He <strong>doesn't bother</strong> to cook today." },
+  { word:'takeaway', pron:'/ˈteɪkəweɪ/', type:'noun', meaning:'Đồ ăn mang về', example:'We ordered a <strong>takeaway</strong> pizza.' },
+  { word:'feed', pron:'/fiːd/', type:'verb', meaning:'Cho ăn (người hoặc động vật)', example:'I <strong>feed</strong> the cat every morning.' },
+  { word:'have a shower', pron:'/hæv ə ˈʃaʊə/', type:'phrase', meaning:'Tắm vòi hoa sen', example:'I <strong>have a shower</strong> before school.' },
+  { word:'have a wash', pron:'/hæv ə wɒʃ/', type:'phrase', meaning:'Vệ sinh cơ thể nhanh', example:'I <strong>have a wash</strong> quickly in the morning.' },
+  { word:'clean my teeth', pron:'/kliːn maɪ tiːθ/', type:'phrase', meaning:'Đánh răng', example:'I <strong>clean my teeth</strong> twice a day.' },
+  { word:'put on make-up', pron:'/pʊt ɒn ˈmeɪkʌp/', type:'phrase', meaning:'Trang điểm', example:'She <strong>puts on make-up</strong> for work.' },
+  { word:'make-up', pron:'/ˈmeɪkʌp/', type:'noun', meaning:'Mỹ phẩm trang điểm', example:'She likes wearing <strong>make-up</strong>.' },
+  { word:'have a bath', pron:'/hæv ə bɑːθ/', type:'phrase', meaning:'Tắm bồn', example:'In winter I <strong>have a bath</strong> to relax.' },
+  { word:'fortunately', pron:'/ˈfɔːtʃənətli/', type:'adv', meaning:'May mắn thay', example:'<strong>Fortunately</strong>, the weather is good today.' },
+  { word:'cleaner', pron:'/ˈkliːnə/', type:'noun', meaning:'Người giúp việc / lau dọn', example:'The <strong>cleaner</strong> comes twice a week.' },
+  { word:'doing my washing', pron:'/ˈduːɪŋ maɪ ˈwɒʃɪŋ/', type:'phrase', meaning:'Giặt đồ', example:'I am <strong>doing my washing</strong> today.' },
+  { word:'make my bed', pron:'/meɪk maɪ bed/', type:'phrase', meaning:'Dọn giường sau khi ngủ dậy', example:'I <strong>make my bed</strong> every morning.' },
+  { word:'do the shopping', pron:'/duː ðə ˈʃɒpɪŋ/', type:'phrase', meaning:'Mua thực phẩm ở siêu thị', example:'We <strong>do the shopping</strong> on Saturdays.' },
+  { word:'stay in', pron:'/steɪ ɪn/', type:'pv', meaning:'Ở nhà', example:'I like to <strong>stay in</strong> and watch TV.' },
+  { word:'go out', pron:'/ɡəʊ aʊt/', type:'pv', meaning:'Ra ngoài', example:'We <strong>go out</strong> every weekend.' },
+  { word:'eat out', pron:'/iːt aʊt/', type:'pv', meaning:'Ăn ở nhà hàng', example:'We <strong>eat out</strong> once a week.' },
+  { word:'come round', pron:'/kʌm raʊnd/', type:'pv', meaning:'Đến thăm ai đó tại nhà', example:'My friends <strong>come round</strong> after school.' },
+  { word:'chat', pron:'/tʃæt/', type:'verb', meaning:'Trò chuyện thân mật', example:'We <strong>chat</strong> about music and films.' }
+];
+const typeColors = { verb:'type-verb', noun:'type-noun', phrase:'type-phrase', adv:'type-adv', pv:'type-pv' };
+const typeLabels = { verb:'Verb', noun:'Noun', phrase:'Phrase', adv:'Adverb', pv:'Phrasal V.' };
+
+// vocab flashcard emojis
+const vfcEmojis = ['⏰','🛏️','🛌','😴','⚡','🌙','💤','🥗','🍎','😅','🍕','🐱','🚿','🫧','🪥','💄','💋','🛁','🍀','🧹','👕','🛏️','🛒','🏠','🚶','🍽️','🏡','💬'];
+
+// ===== WARMUP: IMAGE MATCH =====
+const warmupItems = [
+  { num:1, emoji:'⏰', label:'Picture 1', answer:'A. wake up' },
+  { num:2, emoji:'🚿', label:'Picture 2', answer:'B. have a shower' },
+  { num:3, emoji:'🪥', label:'Picture 3', answer:'C. clean teeth' },
+  { num:4, emoji:'🥗', label:'Picture 4', answer:'D. have lunch' },
+  { num:5, emoji:'📺', label:'Picture 5', answer:'E. stay in & watch TV' },
+  { num:6, emoji:'🍽️', label:'Picture 6', answer:'F. eat out' },
+];
+
+let warmupPicked = null, warmupAssigned = {};
+
+function buildWarmup() {
+  document.getElementById('warmup-images').innerHTML = warmupItems.map(it =>
+    `<div class="img-card" id="wimg-${it.num}" onclick="pickImage(${it.num})">
+      <span class="img-num">${it.num}</span>
+      <div class="img-card-inner">
+        <span class="big-emoji">${it.emoji}</span>
+        <div class="img-label" id="wlbl-${it.num}">${it.label}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  const shuffled = [...warmupItems].sort(() => Math.random() - 0.5);
+  document.getElementById('warmup-answers').innerHTML = shuffled.map(it =>
+    `<div class="ans-chip" id="wans-${it.num}" onclick="pickAnswer(${it.num},'${it.answer}')">${it.answer}</div>`
+  ).join('');
+  warmupPicked = null; warmupAssigned = {};
+  document.getElementById('warmup-score').innerHTML = '';
+}
+
+function pickImage(num) {
+  document.querySelectorAll('.img-card').forEach(c => c.classList.remove('selected'));
+  if (warmupAssigned[num]) return;
+  document.getElementById('wimg-' + num).classList.add('selected');
+  warmupPicked = num;
+}
+
+function pickAnswer(num, label) {
+  if (!warmupPicked) return;
+  const used = Object.values(warmupAssigned).some(v => v.num === num);
+  if (used) return;
+  warmupAssigned[warmupPicked] = { num, label };
+  document.getElementById('wlbl-' + warmupPicked).textContent = label;
+  document.getElementById('wimg-' + warmupPicked).classList.remove('selected');
+  document.getElementById('wans-' + num).classList.add('used');
+  warmupPicked = null;
+}
+
+function checkWarmup() {
+  let correct = 0;
+  warmupItems.forEach(it => {
+    const el = document.getElementById('wimg-' + it.num);
+    const assigned = warmupAssigned[it.num];
+    if (!assigned) return;
+    if (assigned.num === it.num) { el.classList.add('correct'); correct++; }
+    else el.classList.add('incorrect');
+  });
+  const total = Object.keys(warmupAssigned).length;
+  document.getElementById('warmup-score').innerHTML =
+    `<div class="result-msg ${correct===warmupItems.length?'success':'error'}">
+      ${correct===warmupItems.length?'🎉 Xuất sắc!':'📝 Cố lên!'} Đúng ${correct}/${warmupItems.length}
+    </div>`;
+}
+
+function resetWarmup() { buildWarmup(); }
+
+// ===== VOCAB FLASHCARDS =====
+function buildVfcGrid() {
+  document.getElementById('vfc-grid').innerHTML = vocabData.map((v, i) =>
+    `<div class="vfc" onclick="this.classList.toggle('flipped')">
+      <div class="vfc-inner">
+        <div class="vfc-front">
+          <div class="vfc-emoji">${vfcEmojis[i] || '📖'}</div>
+          <div class="vfc-word">${v.word}</div>
+          <div class="vfc-pron">${v.pron}</div>
+        </div>
+        <div class="vfc-back">
+          <div class="vfc-meaning">${v.meaning}</div>
+          <div class="vfc-example">${v.example}</div>
+        </div>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function flipAllVfc(open) {
+  document.querySelectorAll('.vfc').forEach(c => open ? c.classList.add('flipped') : c.classList.remove('flipped'));
+}
+
+// ===== VOCAB TABLE =====
+function buildVocabTable(data) {
+  document.getElementById('vocab-body').innerHTML = data.map(v =>
+    `<tr>
+      <td><span class="word">${v.word}</span></td>
+      <td><span class="pron">${v.pron}</span></td>
+      <td><span class="type-badge ${typeColors[v.type]}">${typeLabels[v.type]}</span></td>
+      <td>${v.meaning}</td>
+      <td style="color:var(--muted);font-size:13px;">${v.example}</td>
+    </tr>`
+  ).join('');
+}
+function filterVocab(q) {
+  buildVocabTable(vocabData.filter(v =>
+    v.word.toLowerCase().includes(q.toLowerCase()) || v.meaning.toLowerCase().includes(q.toLowerCase())
+  ));
+}
+
+// ===== NAV =====
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function showActivity(id, btn) {
+  document.querySelectorAll('.activity-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.activity-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('act-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ===== FILL IN BLANKS (Vocab Task 1) =====
+const fillData = [
+  { s:"I usually ___ at 7:00, but I don't ___ straight away.", b:['wake up','get up'] },
+  { s:'I ___ and then ___ the dog.', b:['get up','feed'] },
+  { s:'After breakfast, I ___ carefully.', b:['make my bed'] },
+  { s:'On weekdays I ___ and watch TV in the evening.', b:['stay in'] },
+  { s:'Every Saturday we ___ at a restaurant.', b:['eat out'] },
+  { s:'I ___ quickly before school.', b:['have a shower'] },
+  { s:'At 10:00 p.m. I ___ and turn off the light.', b:['go to bed'] },
+];
+function buildFill() {
+  document.getElementById('fill-sentences').innerHTML = fillData.map((item,i) => {
+    let bi=0, html=item.s.replace(/___/g, ()=>
+      `<input class="blank-input" data-ans="${item.b[bi++]}" placeholder="...">`
+    );
+    return `<div class="fill-sentence">${i+1}. ${html}</div>`;
+  }).join('');
+}
+function checkFill() {
+  let ok=0, total=0;
+  document.querySelectorAll('#fill-sentences .blank-input').forEach(inp => {
+    total++;
+    const v=inp.value.trim().toLowerCase(), a=inp.dataset.ans.toLowerCase();
+    inp.classList.toggle('correct', v===a); inp.classList.toggle('incorrect', v!==a);
+    if(v===a) ok++;
+  });
+  document.getElementById('fill-result').innerHTML=
+    `<div class="result-msg ${ok===total?'success':'error'}">${ok===total?'🎉 Hoàn hảo!':'⚠️'} Đúng ${ok}/${total} câu.</div>`;
+}
+function resetFill() {
+  document.querySelectorAll('#fill-sentences .blank-input').forEach(inp => {inp.value=''; inp.className='blank-input';});
+  document.getElementById('fill-result').innerHTML='';
+}
+
+// ===== GRAMMAR FILL (Task 2) =====
+const gramFillData = [
+  { s:'My brother ___ (study) English every day.', b:'studies' },
+  { s:'We ___ (have) lunch at 12 o\'clock.', b:'have' },
+  { s:'She ___ (not go) to bed late.', b:"doesn't go" },
+  { s:'___ your father work on weekends?', b:'Does' },
+  { s:'I ___ (usually / watch) TV after dinner.', b:'usually watch' },
+  { s:'They ___ (not eat) breakfast at home.', b:"don't eat" },
+];
+function buildGramFill() {
+  document.getElementById('gram-fill-sentences').innerHTML = gramFillData.map((item,i) => {
+    const html = item.s.replace('___', `<input class="blank-input" data-ans="${item.b}" placeholder="...">`);
+    return `<div class="fill-sentence">${i+1}. ${html}</div>`;
+  }).join('');
+}
+function checkGramFill() {
+  let ok=0, total=gramFillData.length;
+  document.querySelectorAll('#gram-fill-sentences .blank-input').forEach(inp => {
+    const v=inp.value.trim().toLowerCase(), a=inp.dataset.ans.toLowerCase();
+    inp.classList.toggle('correct', v===a); inp.classList.toggle('incorrect', v!==a);
+    if(v===a) ok++;
+  });
+  document.getElementById('gram-fill-result').innerHTML=
+    `<div class="result-msg ${ok===total?'success':'error'}">${ok===total?'🎉 Tuyệt vời!':'📝 Cố lên!'} Đúng ${ok}/${total} câu.</div>`;
+}
+function resetGramFill() {
+  document.querySelectorAll('#gram-fill-sentences .blank-input').forEach(inp=>{inp.value=''; inp.className='blank-input';});
+  document.getElementById('gram-fill-result').innerHTML='';
+}
+
+// ===== FREQUENCY ADVERBS ACTIVITY (Task 3) =====
+const freqActData = [
+  { s:'I ___ drink coffee because I need to work all day.', opts:['always','never'], ans:'always' },
+  { s:'She ___ goes to the gym because she is very busy.', opts:['always','sometimes'], ans:'sometimes' },
+  { s:'We ___ eat fast food. Maybe once a month.', opts:['often','rarely'], ans:'rarely' },
+  { s:'My father ___ arrives late for work. He is a role model.', opts:['always','never'], ans:'never' },
+];
+function buildFreqAct() {
+  document.getElementById('freq-act-sentences').innerHTML = freqActData.map((item,i) => {
+    const selectId = `freq-sel-${i}`;
+    const opts = item.opts.map(o => `<option value="${o}">${o}</option>`).join('');
+    const html = item.s.replace('___',
+      `<select id="${selectId}" style="border:2px solid var(--primary); border-radius:8px; padding:3px 8px; font-family:Nunito,sans-serif; font-weight:700; font-size:14px; outline:none; color:var(--primary); background:var(--primary-light); cursor:pointer;">
+        <option value="">---</option>${opts}
+      </select>`
+    );
+    return `<div class="fill-sentence" style="border-left-color:var(--secondary);">${i+1}. ${html} <span style="color:var(--muted); font-size:13px;">(${item.opts.join(' / ')})</span></div>`;
+  }).join('');
+}
+function checkFreqAct() {
+  let ok=0, total=freqActData.length;
+  freqActData.forEach((item,i) => {
+    const sel = document.getElementById(`freq-sel-${i}`);
+    const isOk = sel.value === item.ans;
+    sel.style.borderColor = isOk ? 'var(--green)' : 'var(--red)';
+    sel.style.background = isOk ? 'var(--green-light)' : 'var(--red-light)';
+    sel.style.color = isOk ? 'var(--green)' : 'var(--red)';
+    if(isOk) ok++;
+  });
+  document.getElementById('freq-act-result').innerHTML =
+    `<div class="result-msg ${ok===total?'success':'error'}">${ok===total?'🎉 Xuất sắc!':'📝 Cố lên!'} Đúng ${ok}/${total} câu.</div>`;
+}
+function resetFreqAct() {
+  freqActData.forEach((_,i) => {
+    const sel = document.getElementById(`freq-sel-${i}`);
+    sel.value=''; sel.style.borderColor='var(--primary)'; sel.style.background='var(--primary-light)'; sel.style.color='var(--primary)';
+  });
+  document.getElementById('freq-act-result').innerHTML='';
+}
+
+// ===== MATCH =====
+const matchPairs = [
+  {word:'wake up', def:'Ngừng ngủ, thức dậy'},
+  {word:'takeaway', def:'Đồ ăn mang về'},
+  {word:'stay in', def:'Ở nhà'},
+  {word:'eat out', def:'Ăn ở nhà hàng'},
+  {word:'snack', def:'Đồ ăn nhẹ'},
+  {word:'cleaner', def:'Người giúp việc'},
+  {word:'chat', def:'Trò chuyện thân mật'},
+  {word:'fortunately', def:'May mắn thay'},
+];
+let matchSel=null, matchScore=0;
+function initMatch() {
+  matchSel=null; matchScore=0;
+  const pairs=[...matchPairs].sort(()=>Math.random()-.5).slice(0,6);
+  const words=[...pairs].sort(()=>Math.random()-.5);
+  const defs=[...pairs].sort(()=>Math.random()-.5);
+  document.getElementById('match-words').innerHTML=words.map(p=>
+    `<div class="match-item" data-word="${p.word}" onclick="selectMatch(this,'word')">${p.word}</div>`
+  ).join('');
+  document.getElementById('match-defs').innerHTML=defs.map(p=>
+    `<div class="match-item" data-word="${p.word}" onclick="selectMatch(this,'def')">${p.def}</div>`
+  ).join('');
+  document.getElementById('match-score').innerHTML='';
+}
+function selectMatch(el, type) {
+  if(el.classList.contains('correct')) return;
+  if(!matchSel) { el.classList.add('selected'); matchSel={el,type}; return; }
+  if(matchSel.type===type) {
+    document.querySelectorAll('.match-item.selected').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected'); matchSel={el,type}; return;
+  }
+  const wEl = type==='word'?el:matchSel.el, dEl = type==='def'?el:matchSel.el;
+  if(wEl.dataset.word===dEl.dataset.word) {
+    wEl.classList.remove('selected'); dEl.classList.remove('selected');
+    wEl.classList.add('correct'); dEl.classList.add('correct');
+    matchScore++;
+    const total=document.querySelectorAll('#match-words .match-item').length;
+    document.getElementById('match-score').innerHTML=`<div class="score-badge">⭐ ${matchScore}/${total}</div>`;
+    if(matchScore===total) document.getElementById('match-score').innerHTML+=`<div class="result-msg success">🎉 Xuất sắc! Ghép đúng tất cả!</div>`;
+  } else {
+    wEl.classList.add('incorrect'); dEl.classList.add('incorrect');
+    setTimeout(()=>{wEl.classList.remove('incorrect','selected'); dEl.classList.remove('incorrect','selected');},600);
+  }
+  matchSel=null;
+}
+
+// ===== SORT =====
+const sortData = [
+  {words:['I','usually','wake','up','at','7','a.m.'], answer:'I usually wake up at 7 a.m.'},
+  {words:['She',"doesn't",'eat','breakfast','at','home'], answer:"She doesn't eat breakfast at home"},
+  {words:['He','always','makes','his','bed','every','morning'], answer:'He always makes his bed every morning'},
+  {words:['Do','you','usually','cook','your','own','meals?'], answer:'Do you usually cook your own meals?'},
+  {words:['They','never','eat','fast','food','at','home'], answer:'They never eat fast food at home'},
+];
+function buildSort() {
+  document.getElementById('sort-questions').innerHTML = sortData.map((q,i) => {
+    const shuffled=[...q.words].sort(()=>Math.random()-.5);
+    return `<div class="card" style="margin-bottom:14px;">
+      <div style="font-weight:700;margin-bottom:8px;color:var(--muted);font-size:13px;">Câu ${i+1}:</div>
+      <div class="word-bank" id="bank-${i}">${shuffled.map(w=>`<div class="word-chip" onclick="placeWord(this,${i},'${w}')">${w}</div>`).join('')}</div>
+      <div class="sort-target" id="target-${i}" data-answer="${q.answer}"></div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-primary" style="font-size:13px;padding:8px 16px;" onclick="checkSort(${i})">✅ Kiểm tra</button>
+        <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="resetSort(${i})">🔄 Reset</button>
+      </div>
+      <div id="sort-result-${i}" style="margin-top:8px;"></div>
+    </div>`;
+  }).join('');
+}
+function placeWord(el,qi,word) {
+  if(el.classList.contains('used')) return;
+  el.classList.add('used');
+  const chip=document.createElement('div'); chip.className='placed-chip'; chip.textContent=word;
+  chip.onclick=()=>{chip.remove(); el.classList.remove('used');};
+  document.getElementById('target-'+qi).appendChild(chip);
+}
+function checkSort(qi) {
+  const target=document.getElementById('target-'+qi);
+  const placed=Array.from(target.querySelectorAll('.placed-chip')).map(c=>c.textContent).join(' ');
+  const answer=target.dataset.answer;
+  const ok=placed.replace(/[?]/g,'').toLowerCase()===answer.replace(/[?]/g,'').toLowerCase();
+  document.getElementById('sort-result-'+qi).innerHTML=
+    ok?`<div class="result-msg success">🎉 Chính xác!</div>`
+      :`<div class="result-msg error">❌ Đáp án: <em>${answer}</em></div>`;
+}
+function resetSort(qi) {
+  document.getElementById('target-'+qi).innerHTML='';
+  document.getElementById('sort-result-'+qi).innerHTML='';
+  document.querySelectorAll(`#bank-${qi} .word-chip`).forEach(c=>c.classList.remove('used'));
+}
+
+// ===== VOCAB QUIZ =====
+const quizData = [
+  {q:'"snack" có nghĩa là gì?', opts:['Đồ ăn nhẹ','Bữa tối','Đồ uống','Bữa sáng'], ans:0},
+  {q:'Từ nào có nghĩa là "ở nhà"?', opts:['eat out','go out','stay in','come round'], ans:2},
+  {q:'"takeaway" là gì?', opts:['Bữa trưa văn phòng','Đồ ăn mang về','Bữa tối tại nhà','Đồ ăn miễn phí'], ans:1},
+  {q:'Điền vào chỗ trống: I usually ___ at 7am.', opts:['go to sleep','wake up','eat out','stay in'], ans:1},
+  {q:'"fortunately" có nghĩa là gì?', opts:['Không may','Cuối cùng','May mắn thay','Thường xuyên'], ans:2},
+  {q:'"chat" có nghĩa là gì?', opts:['Nấu ăn','Trò chuyện','Dọn dẹp','Nghỉ ngơi'], ans:1},
+  {q:'"feed" có nghĩa là gì?', opts:['Đi ngủ','Giặt đồ','Cho ăn','Tắm rửa'], ans:2},
+  {q:'Cụm từ nào có nghĩa "ăn ở nhà hàng"?', opts:['stay in','eat out','come round','go to sleep'], ans:1},
+];
+let quizAnswers={};
+function buildQuiz() {
+  quizAnswers={};
+  document.getElementById('quiz-items').innerHTML=quizData.map((q,i)=>
+    `<div class="quiz-item">
+      <div class="quiz-question">${i+1}. ${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,oi)=>
+        `<div class="quiz-option" onclick="answerQuiz(this,${i},${oi},${q.ans})">${String.fromCharCode(65+oi)}. ${o}</div>`
+      ).join('')}</div>
+    </div>`
+  ).join('');
+  document.getElementById('quiz-total').innerHTML='';
+  document.querySelector('#quiz-progress-bar .progress-bar-fill').style.width='0%';
+}
+function answerQuiz(el,qi,oi,correct) {
+  if(quizAnswers[qi]!==undefined) return;
+  quizAnswers[qi]=oi;
+  const opts=el.parentElement.querySelectorAll('.quiz-option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  if(oi===correct) el.classList.add('correct');
+  else { el.classList.add('incorrect'); opts[correct].classList.add('correct'); }
+  document.querySelector('#quiz-progress-bar .progress-bar-fill').style.width=(Object.keys(quizAnswers).length/quizData.length*100)+'%';
+  if(Object.keys(quizAnswers).length===quizData.length) {
+    const score=Object.entries(quizAnswers).filter(([i,v])=>v===quizData[i].ans).length;
+    document.getElementById('quiz-total').innerHTML=
+      `<div class="score-badge">🏆 Kết quả: ${score}/${quizData.length}</div>
+       <button class="btn btn-secondary" style="margin-top:8px;" onclick="buildQuiz()">🔄 Chơi lại</button>`;
+  }
+}
+
+// ===== LISTENING QUIZ =====
+const listeningQuizData = [
+  {q:'What time does the speaker usually wake up?', opts:['6:00 am','7:00 am','8:00 am','9:00 am'], ans:1},
+  {q:'What does the speaker have for breakfast?', opts:['Eggs and toast','Coffee and cereal','Coffee and toast','Tea and fruit'], ans:2},
+  {q:'What does the speaker usually do in the evening on weekdays?', opts:['Go out with friends','Stay in and watch TV','Eat out at a restaurant','Do the shopping'], ans:1},
+  {q:'What time does the speaker usually go to bed?', opts:['9:00 pm','10:00 pm','10:30 pm','11:00 pm'], ans:2},
+  {q:'Who does a lot of the housework in the speaker\'s home?', opts:['The speaker','The speaker\'s mum','The cleaner','The speaker\'s sister'], ans:2},
+];
+let listeningAnswers={};
+function buildListeningQuiz() {
+  listeningAnswers={};
+  document.getElementById('listening-quiz').innerHTML=listeningQuizData.map((q,i)=>
+    `<div class="quiz-item">
+      <div class="quiz-question">${i+1}. ${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,oi)=>
+        `<div class="quiz-option" onclick="answerListening(this,${i},${oi},${q.ans})">${String.fromCharCode(65+oi)}. ${o}</div>`
+      ).join('')}</div>
+    </div>`
+  ).join('');
+}
+function answerListening(el,qi,oi,correct) {
+  if(listeningAnswers[qi]!==undefined) return;
+  listeningAnswers[qi]=oi;
+  const opts=el.parentElement.querySelectorAll('.quiz-option');
+  opts.forEach(o=>o.classList.add('disabled'));
+  if(oi===correct) el.classList.add('correct');
+  else { el.classList.add('incorrect'); opts[correct].classList.add('correct'); }
+}
+function checkListeningQuiz() {
+  const score=Object.entries(listeningAnswers).filter(([i,v])=>v===listeningQuizData[i].ans).length;
+  const total=listeningQuizData.length;
+  document.getElementById('listening-result').innerHTML=
+    `<div class="result-msg ${score===total?'success':'error'}">
+      ${score===total?'🎉 Tuyệt vời!':'📝 Cố lên!'} Đúng ${score}/${total} câu.
+    </div>`;
+}
+function resetListeningQuiz() { buildListeningQuiz(); document.getElementById('listening-result').innerHTML=''; }
+
+// ===== LISTEN FILL =====
+function checkListenFill() {
+  let ok=0, total=0;
+  document.querySelectorAll('#act-listening .fill-sentence .blank-input').forEach(inp=>{
+    total++;
+    const v=inp.value.trim().toLowerCase(), a=inp.dataset.ans.toLowerCase();
+    inp.classList.toggle('correct',v===a); inp.classList.toggle('incorrect',v!==a);
+    if(v===a) ok++;
+  });
+  document.getElementById('listen-fill-result').innerHTML=
+    `<div class="result-msg ${ok===total?'success':'error'}">${ok===total?'🎉 Hoàn hảo!':'⚠️'} Đúng ${ok}/${total}.</div>`;
+}
+function resetListenFill() {
+  document.querySelectorAll('#act-listening .fill-sentence .blank-input').forEach(inp=>{inp.value=''; inp.className='blank-input';});
+  document.getElementById('listen-fill-result').innerHTML='';
+}
+
+// ===== WORD COUNT =====
+function countWords() {
+  const text = document.getElementById('writing-area').value.trim();
+  const count = text ? text.split(/\s+/).length : 0;
+  const el = document.getElementById('word-count');
+  el.textContent = count;
+  el.style.color = (count>=80&&count<=120) ? 'var(--green)' : count>120 ? 'var(--red)' : 'var(--muted)';
+}
+
+// ===== GRAMMAR QUIZ (in grammar section) =====
+const grammarQ = [
+  {q:'My brother ________ (study) English every day.', opts:['study','studies','studying','studied'], ans:1},
+  {q:'She ________ (not go) to bed late.', opts:["don't go","doesn't go","not goes","isn't going"], ans:1},
+  {q:'I ________ (usually / watch) TV after dinner.', opts:['usually watch','watch usually','usually watches','am usually watching'], ans:0},
+  {q:'We ________ (not eat) breakfast at home.', opts:["doesn't eat","not eat","don't eat","aren't eating"], ans:2},
+  {q:'________ your father work on weekends?', opts:['Is','Does','Do','Are'], ans:1},
+  {q:'She ________ (have) a shower every morning.', opts:['have','has','is having','having'], ans:1},
+  {q:'They ________ (not watch) TV on weekdays.', opts:["doesn't watch","not watch","don't watch","aren't watching"], ans:2},
+  {q:'________ you usually ________ lunch at home?', opts:['Does / have','Do / has','Do / have','Are / having'], ans:2},
+];
+function buildGrammarQuiz() {
+  document.getElementById('grammar-quiz').innerHTML=grammarQ.map((q,i)=>
+    `<div class="quiz-item">
+      <div class="quiz-question">${i+1}. ${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,oi)=>
+        `<div class="quiz-option grammar-opt" data-qi="${i}" data-oi="${oi}" data-correct="${q.ans}" onclick="selectGrammar(this)">${String.fromCharCode(65+oi)}. ${o}</div>`
+      ).join('')}</div>
+    </div>`
+  ).join('');
+}
+function selectGrammar(el) {
+  document.querySelectorAll(`.grammar-opt[data-qi="${el.dataset.qi}"]`).forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function checkGrammar() {
+  let ok=0;
+  grammarQ.forEach((q,i)=>{
+    const opts=document.querySelectorAll(`.grammar-opt[data-qi="${i}"]`);
+    let answered=false;
+    opts.forEach(o=>{
+      if(o.classList.contains('selected')) {
+        answered=true;
+        if(parseInt(o.dataset.oi)===q.ans) { o.classList.add('correct'); ok++; }
+        else { o.classList.add('incorrect'); opts[q.ans].classList.add('correct'); }
+      }
+      o.classList.add('disabled');
+    });
+    if(!answered) opts[q.ans].classList.add('correct');
+  });
+  document.getElementById('grammar-result').innerHTML=
+    `<div class="result-msg ${ok===grammarQ.length?'success':'error'}">
+      ${ok===grammarQ.length?'🎉 Tuyệt vời!':'📝 Cố lên!'} Đúng ${ok}/${grammarQ.length} câu.
+    </div>`;
+}
+function resetGrammar() {
+  document.querySelectorAll('.grammar-opt').forEach(o=>o.classList.remove('selected','correct','incorrect','disabled'));
+  document.getElementById('grammar-result').innerHTML='';
+}
+
+// ===== READING QUIZ =====
+const readingQuizData = [
+  {q:'What does the writer usually have for breakfast?', opts:['Eggs and toast','A sandwich and juice','Coffee and cereal','Tea and fruit'], ans:2},
+  {q:'Why does the writer have little time in the bathroom in the morning?', opts:['They wake up too late','Their brother and sister use the bathroom','They don\'t like washing','The bathroom is too small'], ans:1},
+  {q:'Who does a lot of the housework in the writer\'s home?', opts:['The writer','The writer\'s mum','The cleaner','The writer\'s sister'], ans:2},
+  {q:'What does the writer usually do on weekdays in the evening?', opts:['Go out with friends','Stay in and watch TV','Eat out in restaurants','Do the shopping'], ans:1},
+];
+let readingAnswers={};
+function buildReadingQuiz() {
+  readingAnswers={};
+  document.getElementById('reading-quiz').innerHTML=readingQuizData.map((q,i)=>
+    `<div class="quiz-item">
+      <div class="quiz-question">${i+1}. ${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,oi)=>
+        `<div class="quiz-option reading-opt" data-qi="${i}" data-oi="${oi}" onclick="selectReading(this,${i},${oi},${q.ans})">${String.fromCharCode(65+oi)}. ${o}</div>`
+      ).join('')}</div>
+    </div>`
+  ).join('');
+}
+function selectReading(el,qi,oi,correct) {
+  if(readingAnswers[qi]!==undefined) return;
+  readingAnswers[qi]=oi;
+  const opts=el.parentElement.querySelectorAll('.reading-opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  if(oi===correct) el.classList.add('correct');
+  else { el.classList.add('incorrect'); opts[correct].classList.add('correct'); }
+}
+function checkReadingQuiz() {
+  const score=Object.entries(readingAnswers).filter(([i,v])=>v===readingQuizData[i].ans).length;
+  document.getElementById('reading-result').innerHTML=
+    `<div class="result-msg ${score===readingQuizData.length?'success':'error'}">
+      ${score===readingQuizData.length?'🎉 Xuất sắc!':'📝 Cố lên!'} Đúng ${score}/${readingQuizData.length}.
+    </div>`;
+}
+function resetReadingQuiz() { buildReadingQuiz(); document.getElementById('reading-result').innerHTML=''; }
+
+// ===== INIT =====
+buildWarmup();
+buildVfcGrid();
+buildVocabTable(vocabData);
+buildFill();
+buildGramFill();
+buildFreqAct();
+initMatch();
+buildSort();
+buildQuiz();
+buildListeningQuiz();
+buildGrammarQuiz();
+buildReadingQuiz();
+</script>
+</body>
+</html>
