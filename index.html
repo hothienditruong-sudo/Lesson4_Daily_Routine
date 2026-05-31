@@ -583,7 +583,64 @@
     </a>
   </div>
 
-<!-- Reading Fill in the Blank -->
+// ===== READING FILL IN THE BLANK =====
+
+const readingAnswers = [
+  "wake up",
+  "get up",
+  "make my bed",
+  "go to the bathroom",
+  "have a wash",
+  "clean my teeth",
+  "have a shower",
+  "have a bath",
+  "breakfast",
+  "lunch",
+  "feed the cat",
+  "do the shopping",
+  "doing my washing",
+  "go to bed",
+  "go to sleep"
+];
+
+function checkReadingQuiz() {
+
+  let score = 0;
+
+  readingAnswers.forEach((answer, index) => {
+
+    const input =
+      document.getElementById(`blank-${index + 1}`);
+
+    if (!input) return;
+
+    const studentAnswer =
+      input.value.trim().toLowerCase();
+
+    if (studentAnswer === answer.toLowerCase()) {
+      score++;
+    }
+
+  });
+
+  document.getElementById('reading-result').innerHTML =
+
+  `<div class="result-msg ${score===15?'success':'error'}">
+      ${score===15?'🎉 Excellent!':'📝 Keep practising!'}
+      Correct ${score}/15.
+   </div>`;
+}
+
+function resetReadingQuiz() {
+
+  for(let i=1;i<=15;i++){
+    const input=document.getElementById(`blank-${i}`);
+    if(input) input.value='';
+  }
+
+  document.getElementById('reading-result').innerHTML='';
+
+}
 <div class="card">
   <div style="font-size:16px; font-weight:800; margin-bottom:12px;">
     📝 Fill in the Blanks
